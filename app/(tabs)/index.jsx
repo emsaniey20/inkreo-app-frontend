@@ -14,7 +14,7 @@ const Home = () => {
         </View>
 
         <View style={styles.bannerContainer}>
-          <Image source={require('../../../assets/images/homeTheme.png')}
+          <Image source={require('../../assets/images/homeTheme.png')}
             style={styles.bannerImage}
           />
 
