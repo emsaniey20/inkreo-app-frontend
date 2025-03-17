@@ -5,7 +5,7 @@ import BlogPost from "./blogPost";
 import Proposal from "./proposal";
 import FileList from "./listFiles";
 import FilesGrid from "./FilesGrid";
-
+import CustomDrawerContent from "./CustomDrawerContent";
 
 export {
     SearchBar,
@@ -15,4 +15,5 @@ export {
     Proposal,
     FileList,
     FilesGrid,
+    CustomDrawerContent,
 };

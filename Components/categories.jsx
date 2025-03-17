@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { BlogPostIcon, ProposalIcon, ResumeIcon, ScriptIcon, SearchIcon } from '@utils/iconTabs';
-import { Ionicons } from '@expo/vector-icons';
 import Research from "./../assets/images/research";
 
 // Categories Data
@@ -18,7 +17,7 @@ const getIconComponent = (iconName, icon, size, color) => {
   switch (iconName) {
     case 'BlogPostIcon':
       return <BlogPostIcon name={icon} size={size} color={color} />;
-      case 'Research':
+    case 'Research':
       return <Research name={icon} size={size} color={color} />;
     case 'ProposalIcon':
       return <ProposalIcon name={icon} size={size} color={color} />;
@@ -55,6 +54,11 @@ const styles = StyleSheet.create({
   scrollContainer: {
     paddingVertical: 15,
     paddingHorizontal: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+    flex: 1,
   },
   categoryButton: {
     width: 60,
@@ -62,7 +66,6 @@ const styles = StyleSheet.create({
     borderRadius: 35, // Circular shape
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,

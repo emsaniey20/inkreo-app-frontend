@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, TextInput, StyleSheet, Image, Keyboard } from 'react-native';
 import Octicons from '@expo/vector-icons/Octicons';
 import { useNavigation } from 'expo-router';
+import { DrawerActions } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native';
 
 const SearchBar = () => {
   const navigation = useNavigation();
@@ -31,7 +33,15 @@ const SearchBar = () => {
 
   return (
     <View style={styles.searchBarContainer}>
+      <TouchableOpacity
+      onPress={() => {
+        // Open the drawer navigation
+        navigation.dispatch(DrawerActions.openDrawer());
+      }}
+      style={{ paddingLeft: 10 }}
+    >
       <Octicons name="three-bars" size={20} color="black" style={{ marginLeft: 15, marginRight: 10 }} />
+      </TouchableOpacity>
       <TextInput
         placeholder="Search documents, templates ..."
         placeholderTextColor="#B0B0B0"

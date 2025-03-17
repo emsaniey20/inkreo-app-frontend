@@ -14,7 +14,7 @@ const fileData = [
 
 const FilesGrid = () => {
   const renderItem = ({ item }) => (
-    <View style={{ }}>
+    <View style={{ width: '50%', padding: 5, alignItems: 'center', justifyContent: 'center' }}>
     <View style={styles.gridItem}>
       <Image source={{ uri: item.image }} style={styles.image} />
     </View>

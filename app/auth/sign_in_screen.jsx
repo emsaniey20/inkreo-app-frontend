@@ -1,17 +1,48 @@
 import React, { useState } from "react";
-import { 
-  View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Keyboard, 
-  TouchableWithoutFeedback, ActivityIndicator, Image 
+import { useRouter } from 'expo-router';
+import {
+  View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Keyboard,
+  TouchableWithoutFeedback, ActivityIndicator, Image, Dimensions
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"; // Use vector icons
+import { ScrollView } from "react-native";
 
 const validateEmail = (email) => /\S+@\S+\.\S+/.test(email); // Moved outside the component
 
-const LoginScreen = ({ navigation, onLoginSuccess, onRegister  }) => {
+const { height } = Dimensions.get('window');
+
+const LoginScreen = ({ navigation, onLoginSuccess, onRegister }) => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const getMarginForScreenSize = () => {
+    if (height < 600) {
+      // Small screen
+      return "81%";
+    } else if (height >= 600 && height < 900) {
+      // Medium screen
+      return 50;
+    } else {
+      // Large screen
+      return 100;
+    }
+  };
+
+  const getPaddingForScreenSize = () => {
+    if (height < 600) {
+      // Small screen
+      return "81%";
+    } else if (height >= 600 && height < 900) {
+      // Medium screen
+      return 120;
+    } else {
+      // Large screen
+      return 0;
+    }
+  };
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -36,7 +67,7 @@ const LoginScreen = ({ navigation, onLoginSuccess, onRegister  }) => {
 
       if (response.ok) {
         Alert.alert("Success", "Login successful!");
-        navigation.replace("HomeScreen"); // Navigate to home on success
+        router.push("/"); // Navigate to home on success
       } else {
         Alert.alert("Error", data.message || "Invalid credentials.");
       }
@@ -46,94 +77,107 @@ const LoginScreen = ({ navigation, onLoginSuccess, onRegister  }) => {
     }
   };
 
+
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        
-        {/* Top PNG Image */}
-        <Image source={require("../../assets/images/wave.png")} style={styles.topImage} />
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          style={styles.scrollView}
+        >
+          {/* Top PNG Image */}
+          <Image source={require("../../assets/images/wave.png")} style={styles.topImage} />
 
-        <Image source={require("../../assets/images/logo-auth_sign-in.png")} style={styles.logo} />
+          {/* Top PNG Image */}
+          <Image source={require("../../assets/images/wave.png")} style={styles.topImage} />
 
-        <Text style={styles.title}>Sign In To Inkreo</Text>
+          <Image source={require("../../assets/images/logo-auth_sign-in.png")} style={styles.logo} />
 
-        <View style={styles.formContainer}>
-        <Text style={styles.formplaceholder}>Email Address</Text>
-          
+          <Text style={styles.title}>Sign In To Inkreo</Text>
 
-        <View style={styles.inputContainer}>
-  <Image source={require("../../assets/images/mail.png")} style={styles.inputIcon} />
-  <Image source={require("../../assets/images/Line.png")} style={styles.inputIcon1} />
-  <TextInput
-  style={[styles.input, { color: '#FFFFFF' }]}
-  placeholder="you@example.com"
-  placeholderTextColor="#FFFFFF66"
-  value={email}
-  onChangeText={setEmail}
-  keyboardType="email-address"
-  autoCapitalize="none"
-/>
-
-</View>
-<Text style={styles.formplaceholder}>Email Address</Text>
-<View style={styles.inputContainer}>
-  <Image source={require("../../assets/images/lock.png")} style={styles.inputIcon3} />
-  <Image source={require("../../assets/images/Line.png")} style={styles.inputIcon1} />
-  <TextInput
-    style={[styles.passwordInput, { color: '#FFFFFF' }]}
-    placeholder="Fill in your Password"
-    placeholderTextColor="#FFFFFF66"
-    value={password}
-    onChangeText={setPassword}
-    secureTextEntry={!isPasswordVisible}
-  />
-  <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
-    <Icon 
-      name={isPasswordVisible ? "eye-off" : "eye"} 
-      size={24} 
-      color="#FFFFFF66" 
-    />
-  </TouchableOpacity>
-</View>
+          <View style={styles.formContainer}>
+            <Text style={styles.formplaceholder}>Email Address</Text>
 
 
-          <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
-            <Text style={styles.forgotPassword}>Forgot Password</Text>
-          </TouchableOpacity>
+            <View style={styles.inputContainer}>
+              <Image source={require("../../assets/images/mail.png")} style={styles.inputIcon} />
+              <Image source={require("../../assets/images/Line.png")} style={styles.inputIcon1} />
+              <TextInput
+                style={[styles.input, { color: '#FFFFFF' }]}
+                placeholder="you@example.com"
+                placeholderTextColor="#FFFFFF66"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
 
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            {loading ? <ActivityIndicator color="#FFF" /> : <Text style={styles.loginText}>Sign In</Text>}
-          </TouchableOpacity>
-          <View style={styles.dividerContainer}>
-        <View style={styles.line} />
-        <Text style={styles.dividerText}>Or</Text>
-        <View style={styles.line} />
-      </View>
-      <TouchableOpacity style={styles.loginWithGoogleButton} onPress={onLoginSuccess} disabled={loading}>
-  {loading ? (
-    <ActivityIndicator color="#FFF" />
-  ) : (
-    <View style={styles.buttonContent}>
-      <Image
-        source={require('../../assets/images/devicon_google.png')}
-        style={styles.buttonIcon2}
-      />
-      <Text style={styles.loginText}>Continue with Google</Text>
-    </View>
-  )}
-</TouchableOpacity>
+            </View>
+            <Text style={styles.formplaceholder}>Email Address</Text>
+            <View style={styles.inputContainer}>
+              <Image source={require("../../assets/images/lock.png")} style={styles.inputIcon3} />
+              <Image source={require("../../assets/images/Line.png")} style={styles.inputIcon1} />
+              <TextInput
+                style={[styles.passwordInput, { color: '#FFFFFF' }]}
+                placeholder="Fill in your Password"
+                placeholderTextColor="#FFFFFF66"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!isPasswordVisible}
+              />
+              <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+                <Icon
+                  name={isPasswordVisible ? "eye-off" : "eye"}
+                  size={24}
+                  color="#FFFFFF66"
+                />
+              </TouchableOpacity>
+            </View>
 
-          <TouchableOpacity onPress={onRegister} >
-            <Text style={styles.signUpText}>
-            Don’t have an account? 
-              <Text style={styles.signUpLink}> Sign Up</Text>
-            </Text>
-          </TouchableOpacity>
-        </View>
 
-        {/* Bottom PNG Image */}
-        <Image source={require("../../assets/images/wave2.png")} style={styles.bottomImage} />
+            <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
+              <Text style={styles.forgotPassword}>Forgot Password</Text>
+            </TouchableOpacity>
 
+            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+              {loading ? <ActivityIndicator color="#FFF" /> : <Text style={styles.loginText}>Sign In</Text>}
+            </TouchableOpacity>
+            <View style={styles.dividerContainer}>
+              <View style={styles.line} />
+              <Text style={styles.dividerText}>Or</Text>
+              <View style={styles.line} />
+            </View>
+            <TouchableOpacity style={styles.loginWithGoogleButton} onPress={onLoginSuccess} disabled={loading}>
+              {/* <TouchableOpacity
+            style={styles.loginWithGoogleButton}
+            onPress={() => router.push('/')}
+          > */}
+              {loading ? (
+                <ActivityIndicator color="#FFF" />
+              ) : (
+                <View style={styles.buttonContent}>
+                  <Image
+                    source={require('../../assets/images/devicon_google.png')}
+                    style={styles.buttonIcon2}
+                  />
+                  <Text style={styles.loginText}>Continue with Google</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={onRegister} >
+              <Text style={[styles.signUpText, { marginTop: getMarginForScreenSize(), paddingBottom: getPaddingForScreenSize() }]}>
+                Don’t have an account?
+                <Text style={styles.signUpLink}> Sign Up</Text>
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Bottom PNG Image */}
+          <Image source={require("../../assets/images/wave2.png")} style={styles.bottomImage} />
+
+        </ScrollView>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -163,7 +207,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: 77.94, // Position 77px from the top
   },
-  
+
   bottomImage: {
     width: "100%",
     height: 103.3,
@@ -173,23 +217,23 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
   },
-  title: { 
-    fontSize: 32, 
-    fontWeight: "700", 
-    width: 263, 
-    height: 38, 
-    color: "#FFFFFF", 
-    marginTop: 20, 
+  title: {
+    fontSize: 32,
+    fontWeight: "700",
+    width: 263,
+    height: 38,
+    color: "#FFFFFF",
+    marginTop: 20,
     textAlign: "center", // Centers the text inside the container
-    alignSelf: "center", 
+    alignSelf: "center",
   },
-  
-  formContainer: { flex: 1, justifyContent: "flex-start",  paddingHorizontal: 20, marginTop: 30, },
+
+  formContainer: { flex: 1, justifyContent: "flex-start", paddingHorizontal: 20, marginTop: 30, },
   formplaceholder: {
-    fontSize: 14, 
-    fontWeight: "500", 
-    color: "#FFFFFF", 
-    marginTop: 20, 
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#FFFFFF",
+    marginTop: 20,
     textAlign: "left",
 
   },
@@ -227,14 +271,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   input: {
-    flex: 1,  borderColor: "#FFFFFF66", 
-     fontSize: 12, fontWeight: "500",
+    flex: 1, borderColor: "#FFFFFF66",
+    fontSize: 12, fontWeight: "500",
   },
   passwordContainer: {
     flexDirection: "row", alignItems: "center", borderColor: "#FFFFFF66", borderWidth: 1,
     borderRadius: 10, paddingHorizontal: 15, backgroundColor: "#783CC8",
   },
-  passwordInput: { flex: 1, height: 50, fontSize: 14,  },
+  passwordInput: { flex: 1, height: 50, fontSize: 14, },
   forgotPassword: { color: "#E94560", textAlign: "right", marginTop: 10, fontSize: 14, fontWeight: "500", },
   loginButton: {
     backgroundColor: "#E94560", paddingVertical: 15, borderRadius: 10,
@@ -256,7 +300,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#FFFFFF",
     fontWeight: "700",
-    
+
   },
   loginWithGoogleButton: {
     backgroundColor: "#000000",
@@ -277,7 +321,7 @@ const styles = StyleSheet.create({
     height: 20,
     marginRight: 10,
   },
-  signUpText: { textAlign: "center", color: "#FFFFFF", marginTop: 100, fontSize: 14, fontWeight: "700" },
+  signUpText: { textAlign: "center", color: "#FFFFFF", fontSize: 14, fontWeight: "700" },
   signUpLink: { color: "#E63946", fontWeight: "bold" },
 });
 
