@@ -1,18 +1,31 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, TextInput, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { SimpleLineIcons, FontAwesome6, MaterialIcons } from '@expo/vector-icons';
 import { FileList, FilesGrid } from '@Components';
 
+const { height } = Dimensions.get('window'); // Get screen height
 
 const Files = () => {
   const [viewMode, setViewMode] = useState('grid');  // State to toggle between grid and list
+  const getPaddingForScreenSize = () => {
+    if (height < 600) {
+      // Small screen
+      return "81%";
+    } else if (height >= 600 && height < 900) {
+      // Medium screen
+      return "68%";
+    } else {
+      // Large screen
+      return "55%";
+    }
+  };
 
   // Toggle between grid and list views
   const toggleViewMode = () => {
     setViewMode((prevMode) => (prevMode === 'grid' ? 'list' : 'grid'));
   };
 
-   return (
+  return (
     <View style={styles.container}>
       {/* Search Bar */}
       <View style={styles.searchBarContainer}>
@@ -38,8 +51,8 @@ const Files = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Conditionally Render Grid or List */}
-      <View style={{ marginBottom: "68%" }}>
+      {/* Render either FilesGrid or FileList based on viewMode */}
+      <View style={[styles.contentContainer, { paddingBottom: getPaddingForScreenSize() }]}>
         {viewMode === 'grid' ? <FilesGrid /> : <FileList />}
       </View>
     </View>
@@ -85,6 +98,9 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginHorizontal: 10,
+  },
+  contentContainer: {
+    margingBottom: "50%",
   },
 });
 

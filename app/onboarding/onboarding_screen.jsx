@@ -37,11 +37,11 @@ const OnboardingScreen = ({ onFinish }) => {
   return (
     <View style={styles.container}>
       <PagerView
-  ref={pagerRef} // Attach the ref
-  style={styles.pagerView}
-  initialPage={0}
-  onPageSelected={(e) => setIndex(e.nativeEvent.position)}
->
+        ref={pagerRef} // Attach the ref
+        style={styles.pagerView}
+        initialPage={0}
+        onPageSelected={(e) => setIndex(e.nativeEvent.position)}
+      >
 
         {slides.map((slide) => (
           <View key={slide.id} style={[styles.slide, { backgroundColor: slide.backgroundColor }]}>
@@ -64,18 +64,18 @@ const OnboardingScreen = ({ onFinish }) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-  style={styles.nextButton}
-  onPress={() => {
-    if (index < slides.length - 1) {
-      pagerRef.current?.setPage(index + 1); // Move to next page
-    } else {
-      onFinish(); // Finish onboarding
-    }
-  }}
-  accessibilityLabel={index === slides.length - 1 ? "Get Started" : "Next Slide"}
->
-  <Text style={styles.nextText}>{index === slides.length - 1 ? "Get Started" : "Next"}</Text>
-</TouchableOpacity>
+          style={styles.nextButton}
+          onPress={() => {
+            if (index < slides.length - 1) {
+              pagerRef.current?.setPage(index + 1); // Move to next page
+            } else {
+              onFinish(); // Finish onboarding
+            }
+          }}
+          accessibilityLabel={index === slides.length - 1 ? "Get Started" : "Next Slide"}
+        >
+          <Text style={styles.nextText}>{index === slides.length - 1 ? "Get Started" : "Next"}</Text>
+        </TouchableOpacity>
 
 
       </View>
@@ -84,10 +84,14 @@ const OnboardingScreen = ({ onFinish }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#FFF" },
+  container: {
+     flex: 1,
+      backgroundColor: "#FFF" ,
+      marginTop: -30,
+    },
   pagerView: { flex: 1 },
   slide: { width, height, alignItems: "center", justifyContent: "center", paddingHorizontal: 10 },
-  image: { width: width * 0.75, height: height * 0.38, resizeMode: "contain", marginBottom: 10 },
+  image: { width: width * 0.75, height: height * 0.35, resizeMode: "contain", marginBottom: 10 },
   title: {
     fontSize: 26,
     fontWeight: "700",
@@ -121,10 +125,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: "#E94560",
   },
-  bottomButtons: { flexDirection: "row", gap: 10, justifyContent: "space-between", paddingHorizontal: 50, marginBottom: 30 },
+  bottomButtons: { flexDirection: "row", gap: 10, justifyContent: "space-between", paddingHorizontal: 30, marginBottom: 30 },
   skipText: { fontSize: 15, fontWeight: "700", color: "#000000" },
   skipButton: {
-    backgroundColor: "#FFF",
+    backgroundColor: "#fff",
     width: 149,
     height: 54,
     justifyContent: "center",

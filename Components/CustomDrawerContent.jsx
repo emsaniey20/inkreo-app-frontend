@@ -33,7 +33,8 @@ export default function CustomDrawerContent(props) {
             marginTop: 10,
           }}
         />
-        <TouchableOpacity onPress={() => navigation.closeDrawer()}>
+        {/* Use props.navigation to close the drawer */}
+        <TouchableOpacity onPress={() => props.navigation.closeDrawer()}>
           <MaterialCommunityIcons name="close" size={28} color="#E94560" />
         </TouchableOpacity>
       </View>
@@ -81,7 +82,7 @@ export default function CustomDrawerContent(props) {
             label={item.title}
             onPress={() => {
               setActiveDoc(item.id); // Set the active document when clicked
-              navigation.push("Files"); // Navigate to the document route
+              navigation.push(item.route); // Navigate to the document route
             }}
             icon={() => <MaterialCommunityIcons name="file-document" size={20} />}
             activeTintColor="#E94560"
@@ -93,8 +94,6 @@ export default function CustomDrawerContent(props) {
               borderLeftColor: isActive ? '#E94560' : 'transparent',
               borderRadius: 10,
               color: '#E94560',
-
-              
             }}
           />
         );
