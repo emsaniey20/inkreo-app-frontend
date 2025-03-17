@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import React, { useState } from "react";
 import { 
   View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Keyboard, 
@@ -8,6 +9,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons"; // Use vect
 const validateEmail = (email) => /\S+@\S+\.\S+/.test(email); // Moved outside the component
 
 const LoginScreen = ({ navigation, onLoginSuccess, onRegister  }) => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -123,7 +125,7 @@ const LoginScreen = ({ navigation, onLoginSuccess, onRegister  }) => {
   )}
 </TouchableOpacity>
 
-          <TouchableOpacity onPress={onRegister} >
+<TouchableOpacity onPress={() => router.push('/auth/register_screen')}>
             <Text style={styles.signUpText}>
             Don’t have an account? 
               <Text style={styles.signUpLink}> Sign Up</Text>

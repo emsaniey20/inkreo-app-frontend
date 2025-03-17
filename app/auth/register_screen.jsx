@@ -179,7 +179,7 @@ const RegisterScreen = ({ navigation, onLogin }) => {
                )}
                
               </TouchableOpacity>
-              <TouchableOpacity onPress={onLogin} >
+              <TouchableOpacity onPress={() => router.push('/auth/sign_in_screen')} >
                            <Text style={styles.signUpText}>
                            Already have an account?
  

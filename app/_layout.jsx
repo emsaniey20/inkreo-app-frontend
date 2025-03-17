@@ -1,89 +1,46 @@
 import { useEffect, useState } from 'react';
-import { Slot } from 'expo-router';
+import { Stack, useRouter, Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import OnboardingScreen from './onboarding/onboarding_screen';
-import LoginScreen from './auth/sign_in_screen';
-import RegisterScreen from './auth/register_screen';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [isMounted, setIsMounted] = useState(false);
-  const [showOnboarding, setShowOnboarding] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
-  const [showRegister, setShowRegister] = useState(false);
+  const [hasSeenOnboarding, setHasSeenOnboarding] = useState(false);
 
   useEffect(() => {
     async function initializeApp() {
       try {
-        // Force onboarding every time for development
-        setShowOnboarding(true);  
-  
-        // 🚀 Later, enable this to respect AsyncStorage
-        // const hasSeenOnboarding = await AsyncStorage.getItem('hasSeenOnboarding');
-        // if (!hasSeenOnboarding) {
-        //   setShowOnboarding(true);
-        // } else {
-        //   setShowLogin(true);
-        // }
-  
+        // Check if user has seen onboarding
+        const seenOnboarding = await AsyncStorage.getItem('hasSeenOnboarding');
+        if (!seenOnboarding) {
+          setHasSeenOnboarding(false);
+          router.replace('/onboarding/onboarding_screen'); // Navigate to onboarding
+        } else {
+          setHasSeenOnboarding(true);
+          router.replace('/auth/sign_in_screen'); // Navigate to login
+        }
       } catch (e) {
         console.error('Error checking app state', e);
       } finally {
-        setIsMounted(true);
         await SplashScreen.hideAsync();
         setIsLoading(false);
       }
     }
-  
+
     initializeApp();
   }, []);
-  
 
-  if (isLoading || !isMounted) return null;
+  if (isLoading) return null;
 
-  if (showOnboarding) {
-    return (
-      <OnboardingScreen
-        onFinish={async () => {
-          await AsyncStorage.setItem('hasSeenOnboarding', 'true');
-          setShowOnboarding(false);
-          setShowLogin(true);
-        }}
-      />
-    );
-  }
-
-  if (showLogin) {
-    return (
-      <LoginScreen
-        onLoginSuccess={() => {
-          console.log("User logged in!");
-        }}
-        onRegister={() => {
-          setShowLogin(false);
-          setShowRegister(true);
-        }}
-      />
-    );
-  }
-
-  if (showRegister) {
-    return (
-      <RegisterScreen
-        onRegisterSuccess={() => {
-          setShowRegister(false);
-          setShowLogin(true);
-        }}
-        onLogin={() => {
-          setShowRegister(false);
-          setShowLogin(true);
-        }}
-      />
-    );
-  }
-
-  return <Slot />; // Ensures a default view is rendered
+  return (
+    <Stack>
+      <Stack.Screen name="index" options={{ title: "Home" }} />
+      <Stack.Screen name="onboarding/onboarding_screen" options={{ title: "Onboarding", headerShown: false }} />
+      <Stack.Screen name="auth/sign_in_screen" options={{ title: "Sign In", headerShown: false }} />
+      <Stack.Screen name="auth/register_screen" options={{ title: "Register", headerShown: false }} />
+    </Stack>
+  );
 }
