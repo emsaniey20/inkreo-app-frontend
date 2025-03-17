@@ -12,9 +12,6 @@ import { Drawer } from 'expo-router/drawer';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasSeenOnboarding, setHasSeenOnboarding] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -25,28 +22,17 @@ export default function RootLayout() {
   useEffect(() => {
     async function initializeApp() {
       try {
-        // Check if user has seen onboarding
-        const seenOnboarding = await AsyncStorage.getItem('hasSeenOnboarding');
-        if (!seenOnboarding) {
-          setHasSeenOnboarding(false);
-          router.replace('/onboarding/onboarding_screen'); // Navigate to onboarding
-        } else {
-          setHasSeenOnboarding(true);
-          router.replace('/auth/sign_in_screen'); // Navigate to login
         const hasSeenOnboarding = await AsyncStorage.getItem('hasSeenOnboarding');
         const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
 
         // Force onboarding every time for development
-        setShowOnboarding(true);  
+        setShowOnboarding(true);
 
-        // Onboarding Flow
         if (!hasSeenOnboarding) {
           setShowOnboarding(true);
         } else if (isLoggedIn !== 'true') {
-          // If not logged in, show login screen
           setShowLogin(true);
         } else {
-          // User is authenticated
           setIsAuthenticated(true);
         }
       } catch (e) {
@@ -60,40 +46,27 @@ export default function RootLayout() {
     initializeApp();
   }, []);
 
-  if (isLoading) return null;
-
-  return (
-    <Stack>
-      <Stack.Screen name="index" options={{ title: "Home" }} />
-      <Stack.Screen name="onboarding/onboarding_screen" options={{ title: "Onboarding", headerShown: false }} />
-      <Stack.Screen name="auth/sign_in_screen" options={{ title: "Sign In", headerShown: false }} />
-      <Stack.Screen name="auth/register_screen" options={{ title: "Register", headerShown: false }} />
-    </Stack>
-  );
-  // While loading the app (splash screen), return null
   if (isLoading || !isMounted) return null;
 
-  // Onboarding Screen
   if (showOnboarding) {
     return (
       <OnboardingScreen
         onFinish={async () => {
           await AsyncStorage.setItem('hasSeenOnboarding', 'true');
           setShowOnboarding(false);
-          setShowLogin(true); // Move to login after onboarding
+          setShowLogin(true);
         }}
       />
     );
   }
 
-  // Login Screen
   if (showLogin) {
     return (
       <LoginScreen
         onLoginSuccess={async () => {
           await AsyncStorage.setItem('isLoggedIn', 'true');
           setShowLogin(false);
-          setIsAuthenticated(true); // Show the app after login
+          setIsAuthenticated(true);
         }}
         onRegister={() => {
           setShowLogin(false);
@@ -103,13 +76,12 @@ export default function RootLayout() {
     );
   }
 
-  // Register Screen
   if (showRegister) {
     return (
       <RegisterScreen
         onRegisterSuccess={async () => {
           setShowRegister(false);
-          setShowLogin(true); // Move to login after registering
+          setShowLogin(true);
         }}
         onLogin={() => {
           setShowRegister(false);
@@ -119,7 +91,6 @@ export default function RootLayout() {
     );
   }
 
-  // If authenticated, show the drawer navigation and main app
   if (isAuthenticated) {
     return (
       <Drawer
@@ -142,40 +113,13 @@ export default function RootLayout() {
           },
         })}
       >
-        <Drawer.Screen
-          name="(tabs)"
-          options={{
-            drawerLabel: 'Home',
-          }}
-        />
-
-        {/* Hide this screen in the drawer */}
-      <Drawer.Screen
-        name="auth/sign_in_screen"
-        // component={LoginScreen}
-        options={{
-          drawerItemStyle: { display: 'none' },
-        }}
-      />
-      
-      {/* Hide this screen in the drawer */}
-      <Drawer.Screen
-        name="auth/register_screen"
-        options={{
-          drawerItemStyle: { display: 'none' },
-        }}
-      />
-
-      {/* Hide Onboarding screen as well */}
-      <Drawer.Screen
-        name="onboarding/onboarding_screen"
-        options={{
-          drawerItemStyle: { display: 'none' }, 
-        }}
-      />
-      </Drawer> 
+        <Drawer.Screen name="(tabs)" options={{ drawerLabel: 'Home' }} />
+        <Drawer.Screen name="auth/sign_in_screen" options={{ drawerItemStyle: { display: 'none' } }} />
+        <Drawer.Screen name="auth/register_screen" options={{ drawerItemStyle: { display: 'none' } }} />
+        <Drawer.Screen name="onboarding/onboarding_screen" options={{ drawerItemStyle: { display: 'none' } }} />
+      </Drawer>
     );
   }
 
-  return null; // Fallback in case something unexpected happens
+  return null;
 }

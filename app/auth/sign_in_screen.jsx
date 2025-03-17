@@ -1,16 +1,13 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from "react";
-import { useRouter } from 'expo-router';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Keyboard,
-  TouchableWithoutFeedback, ActivityIndicator, Image, Dimensions
+  TouchableWithoutFeedback, ActivityIndicator, Image, Dimensions, ScrollView
 } from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons"; // Use vector icons
-import { ScrollView } from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons"; 
 
-const validateEmail = (email) => /\S+@\S+\.\S+/.test(email); // Moved outside the component
+const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
-const LoginScreen = ({ navigation, onLoginSuccess, onRegister  }) => {
 const { height } = Dimensions.get('window');
 
 const LoginScreen = ({ navigation, onLoginSuccess, onRegister }) => {
@@ -20,31 +17,8 @@ const LoginScreen = ({ navigation, onLoginSuccess, onRegister }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const getMarginForScreenSize = () => {
-    if (height < 600) {
-      // Small screen
-      return "81%";
-    } else if (height >= 600 && height < 900) {
-      // Medium screen
-      return 50;
-    } else {
-      // Large screen
-      return 100;
-    }
-  };
-
-  const getPaddingForScreenSize = () => {
-    if (height < 600) {
-      // Small screen
-      return "81%";
-    } else if (height >= 600 && height < 900) {
-      // Medium screen
-      return 120;
-    } else {
-      // Large screen
-      return 0;
-    }
-  };
+  const getMarginForScreenSize = () => (height < 600 ? "81%" : height < 900 ? 50 : 100);
+  const getPaddingForScreenSize = () => (height < 600 ? "81%" : height < 900 ? 120 : 0);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -58,7 +32,6 @@ const LoginScreen = ({ navigation, onLoginSuccess, onRegister }) => {
 
     setLoading(true);
     try {
-      // Add API request here
       const response = await fetch("https://your-api.com/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -69,7 +42,7 @@ const LoginScreen = ({ navigation, onLoginSuccess, onRegister }) => {
 
       if (response.ok) {
         Alert.alert("Success", "Login successful!");
-        router.push("/"); // Navigate to home on success
+        router.push("/"); 
       } else {
         Alert.alert("Error", data.message || "Invalid credentials.");
       }
@@ -79,29 +52,17 @@ const LoginScreen = ({ navigation, onLoginSuccess, onRegister }) => {
     }
   };
 
-
-
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          style={styles.scrollView}
-        >
-          {/* Top PNG Image */}
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={styles.scrollView}>
           <Image source={require("../../assets/images/wave.png")} style={styles.topImage} />
-
-          {/* Top PNG Image */}
-          <Image source={require("../../assets/images/wave.png")} style={styles.topImage} />
-
           <Image source={require("../../assets/images/logo-auth_sign-in.png")} style={styles.logo} />
 
           <Text style={styles.title}>Sign In To Inkreo</Text>
 
           <View style={styles.formContainer}>
             <Text style={styles.formplaceholder}>Email Address</Text>
-
-
             <View style={styles.inputContainer}>
               <Image source={require("../../assets/images/mail.png")} style={styles.inputIcon} />
               <Image source={require("../../assets/images/Line.png")} style={styles.inputIcon1} />
@@ -114,9 +75,9 @@ const LoginScreen = ({ navigation, onLoginSuccess, onRegister }) => {
                 keyboardType="email-address"
                 autoCapitalize="none"
               />
-
             </View>
-            <Text style={styles.formplaceholder}>Email Address</Text>
+
+            <Text style={styles.formplaceholder}>Password</Text>
             <View style={styles.inputContainer}>
               <Image source={require("../../assets/images/lock.png")} style={styles.inputIcon3} />
               <Image source={require("../../assets/images/Line.png")} style={styles.inputIcon1} />
@@ -129,21 +90,9 @@ const LoginScreen = ({ navigation, onLoginSuccess, onRegister }) => {
                 secureTextEntry={!isPasswordVisible}
               />
               <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
-                <Icon
-                  name={isPasswordVisible ? "eye-off" : "eye"}
-                  size={24}
-                  color="#FFFFFF66"
-                />
+                <Icon name={isPasswordVisible ? "eye-off" : "eye"} size={24} color="#FFFFFF66" />
               </TouchableOpacity>
             </View>
-
-<TouchableOpacity onPress={() => router.push('/auth/register_screen')}>
-            <Text style={styles.signUpText}>
-            Don’t have an account? 
-              <Text style={styles.signUpLink}> Sign Up</Text>
-            </Text>
-          </TouchableOpacity>
-        </View>
 
             <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
               <Text style={styles.forgotPassword}>Forgot Password</Text>
@@ -152,40 +101,32 @@ const LoginScreen = ({ navigation, onLoginSuccess, onRegister }) => {
             <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
               {loading ? <ActivityIndicator color="#FFF" /> : <Text style={styles.loginText}>Sign In</Text>}
             </TouchableOpacity>
+
             <View style={styles.dividerContainer}>
               <View style={styles.line} />
               <Text style={styles.dividerText}>Or</Text>
               <View style={styles.line} />
             </View>
+
             <TouchableOpacity style={styles.loginWithGoogleButton} onPress={onLoginSuccess} disabled={loading}>
-              {/* <TouchableOpacity
-            style={styles.loginWithGoogleButton}
-            onPress={() => router.push('/')}
-          > */}
               {loading ? (
                 <ActivityIndicator color="#FFF" />
               ) : (
                 <View style={styles.buttonContent}>
-                  <Image
-                    source={require('../../assets/images/devicon_google.png')}
-                    style={styles.buttonIcon2}
-                  />
+                  <Image source={require('../../assets/images/devicon_google.png')} style={styles.buttonIcon2} />
                   <Text style={styles.loginText}>Continue with Google</Text>
                 </View>
               )}
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={onRegister} >
+            <TouchableOpacity onPress={() => router.push('/auth/register_screen')}>
               <Text style={[styles.signUpText, { marginTop: getMarginForScreenSize(), paddingBottom: getPaddingForScreenSize() }]}>
-                Don’t have an account?
-                <Text style={styles.signUpLink}> Sign Up</Text>
+                Don’t have an account? <Text style={styles.signUpLink}>Sign Up</Text>
               </Text>
             </TouchableOpacity>
           </View>
 
-          {/* Bottom PNG Image */}
           <Image source={require("../../assets/images/wave2.png")} style={styles.bottomImage} />
-
         </ScrollView>
       </View>
     </TouchableWithoutFeedback>
