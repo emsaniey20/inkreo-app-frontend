@@ -1,17 +1,18 @@
 import { Tabs, useRouter, } from "expo-router";
 import { Foundation, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
-import { FilesFilledIcon, FilesIcon, TemplatesFilledIcon, TemplatesIcon, ToolsFilledIcon, ToolsIcon } from './../../utils/iconTabs';
+import { FilesFilledIcon, FilesIcon, TemplatesFilledIcon, TemplatesIcon, ToolsFilledIcon, ToolsIcon } from '../../utils/iconTabs';
 import { TouchableOpacity } from "react-native";
-
 
 export default function TabLayout({ children }) {
   const router = useRouter();
+  
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: '#E94560',
         tabBarShowLabel: true,
         tabBarLabelStyle: { fontSize: 12, color: '#E94560' },
+        tabBarStyle: { backgroundColor: 'white', height: 68 },
         headerLeft: () =>
           <TouchableOpacity onPress={() => router.push("/")}>
             <MaterialCommunityIcons
@@ -28,7 +29,7 @@ export default function TabLayout({ children }) {
         options={{
           title: "Home",
           headerShown: false,
-          tabBarIcon: ({ focused }) => focused ? <Foundation name="home" size={28} color="#E94560" /> : <Octicons name="home" size={23} color="#E94560" />,
+          tabBarIcon: ({ focused }) => focused ? (<Foundation name="home" size={28} color="#E94560" />)  : (<Octicons name="home" size={23} color="#E94560" />),
         }}
       />
       <Tabs.Screen
@@ -56,3 +57,4 @@ export default function TabLayout({ children }) {
     </Tabs>
   )
 }
+
